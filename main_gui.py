@@ -110,61 +110,47 @@ class BoundControlBox(wx.Panel):
         return self.value
 
 
-class GraphFrame(wx.Frame):
+class GraphFrame(wx.Panel):
     """ The main frame of the application
     """
     title = 'Demo: dynamic matplotlib graph'
     
-    def __init__(self):
-        wx.Frame.__init__(self, None, -1, self.title)
+    def __init__(self, top_panel):
+        # wx.Frame.__init__(self, None, -1, self.title)
+        super(GraphFrame, self).__init__(top_panel)
         
         self.datagen = DataGen()
         self.data = [self.datagen.next()]
         self.paused = False
         
-        self.create_menu()
-        self.create_status_bar()
         self.create_main_panel()
         
         self.redraw_timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.on_redraw_timer, self.redraw_timer)        
         self.redraw_timer.Start(100)
-
-    def create_menu(self):
-        self.menubar = wx.MenuBar()
-        
-        menu_file = wx.Menu()
-        m_expt = menu_file.Append(-1, "&Save plot\tCtrl-S", "Save plot to file")
-        self.Bind(wx.EVT_MENU, self.on_save_plot, m_expt)
-        menu_file.AppendSeparator()
-        m_exit = menu_file.Append(-1, "E&xit\tCtrl-X", "Exit")
-        self.Bind(wx.EVT_MENU, self.on_exit, m_exit)
-                
-        self.menubar.Append(menu_file, "&File")
-        self.SetMenuBar(self.menubar)
-
+    
     def create_main_panel(self):
-        self.panel = wx.Panel(self)
+        # self.panel = wx.Panel(self)
 
         self.init_plot()
-        self.canvas = FigCanvas(self.panel, -1, self.fig)
+        self.canvas = FigCanvas(self, -1, self.fig)
 
-        self.xmin_control = BoundControlBox(self.panel, -1, "X min", 0)
-        self.xmax_control = BoundControlBox(self.panel, -1, "X max", 50)
-        self.ymin_control = BoundControlBox(self.panel, -1, "Y min", 0)
-        self.ymax_control = BoundControlBox(self.panel, -1, "Y max", 100)
+        self.xmin_control = BoundControlBox(self, -1, "X min", 0)
+        self.xmax_control = BoundControlBox(self, -1, "X max", 50)
+        self.ymin_control = BoundControlBox(self, -1, "Y min", 0)
+        self.ymax_control = BoundControlBox(self, -1, "Y max", 100)
         
-        self.pause_button = wx.Button(self.panel, -1, "Pause")
+        self.pause_button = wx.Button(self, -1, "Pause")
         self.Bind(wx.EVT_BUTTON, self.on_pause_button, self.pause_button)
         self.Bind(wx.EVT_UPDATE_UI, self.on_update_pause_button, self.pause_button)
         
-        self.cb_grid = wx.CheckBox(self.panel, -1, 
+        self.cb_grid = wx.CheckBox(self, -1, 
             "Show Grid",
             style=wx.ALIGN_RIGHT)
         self.Bind(wx.EVT_CHECKBOX, self.on_cb_grid, self.cb_grid)
         self.cb_grid.SetValue(True)
         
-        self.cb_xlab = wx.CheckBox(self.panel, -1, 
+        self.cb_xlab = wx.CheckBox(self, -1, 
             "Show X labels",
             style=wx.ALIGN_RIGHT)
         self.Bind(wx.EVT_CHECKBOX, self.on_cb_xlab, self.cb_xlab)        
@@ -189,11 +175,8 @@ class GraphFrame(wx.Frame):
         self.vbox.Add(self.hbox1, 0, flag=wx.ALIGN_LEFT | wx.TOP)
         self.vbox.Add(self.hbox2, 0, flag=wx.ALIGN_LEFT | wx.TOP)
         
-        self.panel.SetSizer(self.vbox)
-        self.vbox.Fit(self)
-    
-    def create_status_bar(self):
-        self.statusbar = self.CreateStatusBar()
+        self.SetSizer(self.vbox)
+        self.vbox.Fit(self)    
 
     def init_plot(self):
         self.dpi = 100
@@ -287,6 +270,66 @@ class GraphFrame(wx.Frame):
     def on_cb_xlab(self, event):
         self.draw_plot()
     
+    def on_redraw_timer(self, event):
+        # if paused do not add data, but still redraw the plot
+        # (to respond to scale modifications, grid change, etc.)
+        #
+        if not self.paused:
+            self.data.append(self.datagen.next())
+        
+        self.draw_plot()
+    
+    def on_exit(self, event):
+        self.Destroy()
+
+class Example(wx.Frame):
+
+    def __init__(self, parent, title):
+        super(Example, self).__init__(parent, title=title, 
+            size=(300, 250))
+        self.create_menu()
+        self.create_status_bar()
+                
+        self.InitUI()
+        self.Centre()
+        self.Show()    
+
+    def InitUI(self):
+    
+        panel = wx.Panel(self)
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        fgs = wx.FlexGridSizer(3, 2, 9, 25)
+        p1 = GraphFrame(panel)
+        p2 = GraphFrame(panel)
+
+        fgs.Add(p1,0,wx.EXPAND|wx.ALL,border=10)
+        fgs.Add(p2,0,wx.EXPAND|wx.ALL,border=10)
+
+        fgs.AddGrowableRow(2, 1)
+        fgs.AddGrowableCol(1, 1)
+
+        hbox.Add(fgs, proportion=1, flag=wx.ALL|wx.EXPAND, border=15)
+        panel.SetSizer(hbox)
+
+    def on_exit(self, event):
+        self.Destroy()
+
+    def create_menu(self):
+        self.menubar = wx.MenuBar()
+        
+        menu_file = wx.Menu()
+        m_expt = menu_file.Append(-1, "&Save plot\tCtrl-S", "Save plot to file")
+        self.Bind(wx.EVT_MENU, self.on_save_plot, m_expt)
+        menu_file.AppendSeparator()
+        m_exit = menu_file.Append(-1, "E&xit\tCtrl-X", "Exit")
+        self.Bind(wx.EVT_MENU, self.on_exit, m_exit)
+                
+        self.menubar.Append(menu_file, "&File")
+        self.SetMenuBar(self.menubar)
+
+    def create_status_bar(self):
+        self.statusbar = self.CreateStatusBar()
+
     def on_save_plot(self, event):
         file_choices = "PNG (*.png)|*.png"
         
@@ -302,19 +345,7 @@ class GraphFrame(wx.Frame):
             path = dlg.GetPath()
             self.canvas.print_figure(path, dpi=self.dpi)
             self.flash_status_message("Saved to %s" % path)
-    
-    def on_redraw_timer(self, event):
-        # if paused do not add data, but still redraw the plot
-        # (to respond to scale modifications, grid change, etc.)
-        #
-        if not self.paused:
-            self.data.append(self.datagen.next())
-        
-        self.draw_plot()
-    
-    def on_exit(self, event):
-        self.Destroy()
-    
+
     def flash_status_message(self, msg, flash_len_ms=1500):
         self.statusbar.SetStatusText(msg)
         self.timeroff = wx.Timer(self)
@@ -327,9 +358,9 @@ class GraphFrame(wx.Frame):
     def on_flash_status_off(self, event):
         self.statusbar.SetStatusText('')
 
-
 if __name__ == '__main__':
-    app = wx.PySimpleApp()
-    app.frame = GraphFrame()
-    app.frame.Show()
+    app = wx.App(redirect=True, filename="log.txt")
+    Example(None, title="Review")
+    # app.frame = GraphFrame()
+    # app.frame.Show()
     app.MainLoop()

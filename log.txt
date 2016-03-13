@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "main_gui.py", line 366, in <module>
+    Example(None, title="Review")
+  File "main_gui.py", line 294, in __init__
+    self.create_status_bar()
+AttributeError: 'Example' object has no attribute 'create_status_bar'
