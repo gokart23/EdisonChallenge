@@ -1,44 +1,60 @@
 Traceback (most recent call last):
-  File "main_gui.py", line 412, in <module>
+  File "main_gui.py", line 421, in <module>
     Example(None, title="ICU Alarm System")
   File "main_gui.py", line 346, in __init__
     self.InitUI()
-  File "main_gui.py", line 357, in InitUI
-    tabOne = GraphTab(notebook)
-  File "main_gui.py", line 315, in __init__
-    gs.Add(control_panel, 0, wx.EXPAND)
-NameError: global name 'control_panel' is not defined
+  File "main_gui.py", line 356, in InitUI
+    sub_panel = wx.Panel(panel, border=SUNKEN_BORDER)
+NameError: global name 'SUNKEN_BORDER' is not defined
 Traceback (most recent call last):
-  File "main_gui.py", line 414, in <module>
+  File "main_gui.py", line 421, in <module>
     Example(None, title="ICU Alarm System")
   File "main_gui.py", line 346, in __init__
     self.InitUI()
-  File "main_gui.py", line 355, in InitUI
-    sub_panel = wx.Panel(panel, size=w, style=wx.SUNKEN_BORDER)
+  File "main_gui.py", line 356, in InitUI
+    sub_panel = wx.Panel(panel, border=wx.SUNKEN_BORDER)
   File "c:\users\karthik meher\appdata\local\enthought\canopy\user\lib\site-packages\wx\_windows.py", line 68, in __init__
     _windows_.Panel_swiginit(self,_windows_.new_Panel(*args, **kwargs))
-TypeError: Expected a 2-tuple of integers or a wxSize object.
+TypeError: 'border' is an invalid keyword argument for this function
 Traceback (most recent call last):
-  File "main_gui.py", line 414, in <module>
+  File "main_gui.py", line 430, in <module>
     Example(None, title="ICU Alarm System")
   File "main_gui.py", line 346, in __init__
     self.InitUI()
-  File "main_gui.py", line 355, in InitUI
-    sub_panel = wx.Panel(panel, size=Size(w,10), style=wx.SUNKEN_BORDER)
-NameError: global name 'Size' is not defined
+  File "main_gui.py", line 371, in InitUI
+    notebook = wx.FlatNotebook(panel)
+AttributeError: 'module' object has no attribute 'FlatNotebook'
 Traceback (most recent call last):
-  File "main_gui.py", line 415, in <module>
+  File "main_gui.py", line 430, in <module>
     Example(None, title="ICU Alarm System")
   File "main_gui.py", line 346, in __init__
     self.InitUI()
-  File "main_gui.py", line 355, in InitUI
-    sw = Size(w, 10)
-NameError: global name 'Size' is not defined
+  File "main_gui.py", line 371, in InitUI
+    notebook = wx.lib.agw.flatnotebook.FlatNotebook(panel)
+AttributeError: 'module' object has no attribute 'lib'
 Traceback (most recent call last):
-  File "main_gui.py", line 414, in <module>
+  File "main_gui.py", line 430, in <module>
     Example(None, title="ICU Alarm System")
   File "main_gui.py", line 346, in __init__
     self.InitUI()
-  File "main_gui.py", line 355, in InitUI
-    sub_panel = GraphFrame(panel)
-TypeError: __init__() takes exactly 3 arguments (2 given)
+  File "main_gui.py", line 372, in InitUI
+    tabOne = DetailsTab(notebook)
+NameError: global name 'DetailsTab' is not defined
+Traceback (most recent call last):
+  File "main_gui.py", line 457, in <module>
+    Example(None, title="ICU Alarm System")
+  File "main_gui.py", line 373, in __init__
+    self.InitUI()
+  File "main_gui.py", line 399, in InitUI
+    tabOne = PatientTab(notebook)
+NameError: global name 'PatientTab' is not defined
+Traceback (most recent call last):
+  File "main_gui.py", line 453, in <module>
+    Example(None, title="ICU Alarm System")
+  File "main_gui.py", line 369, in __init__
+    self.InitUI()
+  File "main_gui.py", line 395, in InitUI
+    tabOne = PatientFrame(notebook)
+  File "main_gui.py", line 193, in __init__
+    panel.SetSizer(hbox)
+NameError: global name 'panel' is not defined

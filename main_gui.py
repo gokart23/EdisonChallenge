@@ -170,6 +170,29 @@ class ControlPanel(wx.Panel):
         self.SetSizer(self.vbox)
         self.vbox.Fit(self)
 
+class PatientFrame(wx.Panel):
+    def __init__(self, top_panel):
+        super(PatientFrame, self).__init__(top_panel)         
+        hbox = wx.BoxSizer(wx.HORIZONTAL)
+        fgs = wx.FlexGridSizer(3, 2, 9, 25)
+        title = wx.StaticText(self, label="Title")
+        author = wx.StaticText(self, label="Author")
+        review = wx.StaticText(self, label="Review")
+
+        tc1 = wx.TextCtrl(self)
+        tc2 = wx.TextCtrl(self)
+        tc3 = wx.TextCtrl(self, style=wx.TE_MULTILINE)
+
+        fgs.AddMany([(title), (tc1, 1, wx.EXPAND), (author), 
+            (tc2, 1, wx.EXPAND), (review, 1, wx.EXPAND), (tc3, 1, wx.EXPAND)])
+
+        fgs.AddGrowableRow(2, 1)
+        fgs.AddGrowableCol(1, 1)
+
+        hbox.Add(fgs, proportion=1, flag=wx.ALL|wx.EXPAND, border=15)
+        self.SetSizer(hbox)
+
+
 class GraphFrame(wx.Panel):
     """ The main frame of the application
     """
@@ -351,14 +374,30 @@ class Example(wx.Frame):
     
         panel = wx.Panel(self)
         sizer = wx.BoxSizer(wx.VERTICAL)
-        w, h = self.GetClientSizeTuple()        
-        sub_panel = GraphFrame(panel, DataGen())
+        # sub_panel = wx.Panel(panel, style=wx.SUNKEN_BORDER)
+        # fgs = wx.FlexGridSizer(3, 2, 9, 25)
+        # title = wx.StaticText(sub_panel, label="Title")
+        # author = wx.StaticText(sub_panel, label="Author")
+        # review = wx.StaticText(sub_panel, label="Review")
+
+        # tc1 = wx.TextCtrl(sub_panel)
+        # tc2 = wx.TextCtrl(sub_panel)
+        # tc3 = wx.TextCtrl(sub_panel, style=wx.TE_MULTILINE)
+
+        # fgs.AddMany([(title), (tc1, 1, wx.EXPAND), (author), (tc2, 1, wx.EXPAND), (review, 1, wx.EXPAND), (tc3, 1, wx.EXPAND)])
+
+        # fgs.AddGrowableRow(2, 1)
+        # fgs.AddGrowableCol(1, 1)
+
+        # sizer.Add(sub_panel, proportion=1, flag=wx.EXPAND, border=15)
+        
         notebook = wx.Notebook(panel)
+        tabOne = PatientFrame(notebook)
+        tabTwo = GraphTab(notebook)        
+        notebook.AddPage(tabOne, "Patients")
+        notebook.AddPage(tabTwo, "Vitals Graphs")
 
-        tabOne = GraphTab(notebook)
-        notebook.AddPage(tabOne, "Vitals Graphs")
-
-        sizer.Add(sub_panel, 1, wx.EXPAND)
+        # sizer.Add(sub_panel, 1, wx.EXPAND)
         sizer.Add(notebook, 1, wx.EXPAND)
         panel.SetSizer(sizer)
 
