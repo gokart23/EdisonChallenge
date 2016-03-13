@@ -1,4 +1,12 @@
 """
+
+Codebase taken from : https://github.com/eliben/code-for-blog/blob/master/2008/wx_mpl_dynamic_graph.py
+
+Author: Karthik Duddu
+
+"""
+
+"""
 This demo demonstrates how to draw a dynamic mpl (matplotlib) 
 plot in a wxPython application.
 It allows "live" plotting as well as manual zooming to specific
@@ -9,9 +17,6 @@ For X, auto mode makes the graph "follow" the data. Set it X min
 to manual 0 to always see the whole data from the beginning.
 Note: press Enter in the 'manual' text box to make a new value 
 affect the plot.
-Eli Bendersky (eliben@gmail.com)
-License: this code is in the public domain
-Last modified: 31.07.2008
 """
 import os
 import pprint
